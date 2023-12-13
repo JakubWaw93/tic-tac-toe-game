@@ -25,6 +25,9 @@ public class TheGame {
         gameMechanics.multiGameLoop();
         if (GameMechanics.isEnd()) {
             Console.farewell();
+            gameMechanics.loadMap();
+            gameMechanics.saveStats();
+            gameMechanics.saveMap();
             Console.showRanking();
         }
     }

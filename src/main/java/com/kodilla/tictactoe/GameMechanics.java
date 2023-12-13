@@ -255,9 +255,6 @@ public class GameMechanics {
                 singleGameLoop();
                 Console.showWinner();
                 addingPoint();
-                loadMap();
-                saveStats();
-                saveMap();
                 Console.showPoints();
             }
             try {
