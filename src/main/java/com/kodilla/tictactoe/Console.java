@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Console {
 
     private static final Scanner input = new Scanner(System.in);
-    static GameMechanics gameMechanics = new GameMechanics();
+    static GameRanking gameRanking = new GameRanking();
 
     public static String howManyPlayers() {
         System.out.println("1 Player or 2 Players? ('1'/'2')");
@@ -17,9 +17,7 @@ public class Console {
         return input.nextLine();
     }
 
-    public static void updateConsole() {
-        String[][] fieldsMark = new String[3][3];
-        int[][] fields = GameMechanics.getArrayOfFields();
+    private static void fieldsIteration(int[][] fields, String[][] fieldsMark) {
         for (int i = 0; i < fields.length; i++) {
             for (int j = 0; j < fields[i].length; j++) {
                 fieldsMark[i][j] = " ";
@@ -30,6 +28,20 @@ public class Console {
                 }
             }
         }
+    }
+
+    public static void updateConsole() {
+        if (GameStats.getVersionOfGame() == 1) {
+            updateConsoleForNormalMap();
+        } else {
+            updateConsoleForBiggerMap();
+        }
+    }
+
+    public static void updateConsoleForNormalMap() {
+        String[][] fieldsMark = new String[3][3];
+        int[][] fields = GameStats.getArrayOfFields();
+        fieldsIteration(fields, fieldsMark);
         System.out.println("  | 1 | 2 | 3 |");
         System.out.println("1 | " + fieldsMark[0][0] + " | " + fieldsMark[0][1] + " | " + fieldsMark[0][2] + " |");
         System.out.println("2 | " + fieldsMark[1][0] + " | " + fieldsMark[1][1] + " | " + fieldsMark[1][2] + " |");
@@ -38,17 +50,8 @@ public class Console {
 
     public static void updateConsoleForBiggerMap() {
         String[][] fieldsMark = new String[10][10];
-        int[][] fields = GameMechanics.getBiggerArrayOfFields();
-        for (int i = 0; i < fields.length; i++) {
-            for (int j = 0; j < fields[i].length; j++) {
-                fieldsMark[i][j] = " ";
-                if (fields[i][j] == 1) {
-                    fieldsMark[i][j] = "O";
-                } else if (fields[i][j] == 2) {
-                    fieldsMark[i][j] = "X";
-                }
-            }
-        }
+        int[][] fields = GameStats.getBiggerArrayOfFields();
+        fieldsIteration(fields, fieldsMark);
         System.out.println("  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  | 10  |");
         System.out.println("1 |  " + fieldsMark[0][0] + "  |  " + fieldsMark[0][1] + "  |  " + fieldsMark[0][2] + "  |  " + fieldsMark[0][3] + "  |  " + fieldsMark[0][4] + "  |  " + fieldsMark[0][5] +
                 "  |  " + fieldsMark[0][6] + "  |  " + fieldsMark[0][7] + "  |  " + fieldsMark[0][8] + "  |  " + fieldsMark[0][9] + "  |  ");
@@ -73,10 +76,10 @@ public class Console {
     }
 
     public static void showWinner() {
-        if (GameMechanics.getWinnerPlayer() == 1) {
-            System.out.println("The winner is: " + GameMechanics.getPlayer1Name());
-        } else if (GameMechanics.getWinnerPlayer() == 2) {
-            System.out.println("The winner is: " + GameMechanics.getPlayer2Name());
+        if (GameStats.getWinnerPlayer() == 1) {
+            System.out.println("The winner is: " + GameStats.getPlayer1Name());
+        } else if (GameStats.getWinnerPlayer() == 2) {
+            System.out.println("The winner is: " + GameStats.getPlayer2Name());
         } else {
             System.out.println("It's a draw.");
         }
@@ -120,12 +123,11 @@ public class Console {
         System.out.println("10|10.1 |10.2 |10.3 |10.4 |10.5 |10.6 |10.7 |10.8 |10.9 |10.10|");
     }
 
-
     public static void whoseTurn() {
-        if (GameMechanics.getTurnOfPlayer() == 1) {
-            System.out.println(GameMechanics.getPlayer1Name() + " turn.");
-        } else if (GameMechanics.getTurnOfPlayer() == 2) {
-            System.out.println(GameMechanics.getPlayer2Name() + " turn.");
+        if (GameStats.getTurnOfPlayer() == 1) {
+            System.out.println(GameStats.getPlayer1Name() + " turn.");
+        } else if (GameStats.getTurnOfPlayer() == 2) {
+            System.out.println(GameStats.getPlayer2Name() + " turn.");
         }
     }
 
@@ -148,9 +150,9 @@ public class Console {
     }
 
     public static void showPoints() {
-        System.out.println("Round: " + GameMechanics.getRound());
-        System.out.println(GameMechanics.getPlayer1Name() + " points: " + GameMechanics.getPlayer1Points() + "\n" + GameMechanics.getPlayer2Name() + " points: "
-                + GameMechanics.getPlayer2Points());
+        System.out.println("Round: " + GameStats.getRound());
+        System.out.println(GameStats.getPlayer1Name() + " points: " + GameStats.getPlayer1Points() + "\n" + GameStats.getPlayer2Name() + " points: "
+                + GameStats.getPlayer2Points());
     }
 
     public static String sayYourName1() {
@@ -174,8 +176,8 @@ public class Console {
 
     public static void showRanking() {
         System.out.println("Players / Wins");
-        Map<String, Integer> map = gameMechanics.getMap();
-        gameMechanics.loadMap();
+        Map<String, Integer> map = gameRanking.getLocalMapForRanking();
+        gameRanking.loadMap();
 
         map.entrySet().stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())

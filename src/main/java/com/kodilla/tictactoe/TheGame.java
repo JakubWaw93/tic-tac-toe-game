@@ -1,33 +1,35 @@
 package com.kodilla.tictactoe;
 public class TheGame {
     GameMechanics gameMechanics = new GameMechanics();
+    PlayerChoicesImplementation playerChoicesImplementation = new PlayerChoicesImplementation();
+    GameRanking gameRanking = new GameRanking();
 
 
     public void game () {
-        if (GameMechanics.getNumberOfPlayers() == 0) {
+        if (GameStats.getNumberOfPlayers() == 0) {
             try {
-                gameMechanics.howManyPlayers();
+                playerChoicesImplementation.howManyPlayers();
             } catch (InvalidNumberOfPlayersException e) {
                 Console.exceptionMessage(e.getMessage());
                 game();
             }
         }
-        gameMechanics.Player1Name();
-        gameMechanics.Player2Name();
-        if (GameMechanics.getVersionOfGame() == 0) {
+        playerChoicesImplementation.Player1Name();
+        playerChoicesImplementation.Player2Name();
+        if (GameStats.getVersionOfGame() == 0) {
             try {
-                gameMechanics.whatVersionOfGame();
+                playerChoicesImplementation.whatVersionOfGame();
             } catch (InvalidVersionNumberException e) {
                 Console.exceptionMessage(e.getMessage());
                 game();
             }
         }
         gameMechanics.multiGameLoop();
-        if (GameMechanics.isEnd()) {
+        if (GameStats.isEnd()) {
             Console.farewell();
-            gameMechanics.loadMap();
-            gameMechanics.saveStats();
-            gameMechanics.saveMap();
+            gameRanking.loadMap();
+            gameRanking.saveStats();
+            gameRanking.saveMap();
             Console.showRanking();
         }
     }

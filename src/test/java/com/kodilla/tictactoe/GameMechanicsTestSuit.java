@@ -345,8 +345,6 @@ public class GameMechanicsTestSuit {
         assertEquals(0, winnerPlayer);
     }
 
-    //@Mock
-    //MockedStatic<Console> consoleMock = mockStatic(Console.class);
     @Nested
     @DisplayName("Exceptions Tests")
     class ExceptionsTests {
@@ -355,41 +353,42 @@ public class GameMechanicsTestSuit {
         void fieldNotFoundExceptionTest() throws FieldNotFoundException, NotEmptyFieldException {
             //Given
             MockedStatic<Console> consoleMock = mockStatic(Console.class);
-            MockedStatic<GameMechanics> gameMechanicsMockedStatic = mockStatic(GameMechanics.class);
-            GameMechanics gameMechanics = new GameMechanics();
+            MockedStatic<GameStats> gameStatsMockedStatic = mockStatic(GameStats.class);
+            PlayerChoicesImplementation playerChoicesImplementation = new PlayerChoicesImplementation();
             when(Console.moveReaderColumns()).thenReturn("22");
             when(Console.moveReaderRows()).thenReturn("4");
-            when(GameMechanics.getVersionOfGame()).thenReturn(1);
-            when(GameMechanics.getArrayOfFields()).thenReturn(new int [3][3] );
+            when(GameStats.getVersionOfGame()).thenReturn(1);
+            when(GameStats.getArrayOfFields()).thenReturn(new int [3][3] );
             //When&Then
-            assertThrows(FieldNotFoundException.class, gameMechanics::makeAMove);
+            assertThrows(FieldNotFoundException.class, playerChoicesImplementation::makeAMove);
             consoleMock.close();
-            gameMechanicsMockedStatic.close();
+            gameStatsMockedStatic.close();
         }
         @Test
         void notEmptyFieldExceptionTest() throws FieldNotFoundException, NotEmptyFieldException {
             //Given
-            GameMechanics gameMechanics = new GameMechanics();
+            PlayerChoicesImplementation playerChoicesImplementation = new PlayerChoicesImplementation();
             MockedStatic<Console> consoleMock = mockStatic(Console.class);
             when(Console.moveReaderColumns()).thenReturn("2");
             when(Console.moveReaderRows()).thenReturn("1");
-            MockedStatic<GameMechanics> gameMechanicsMockedStatic = mockStatic(GameMechanics.class);
-            when(GameMechanics.getVersionOfGame()).thenReturn(1);
+            MockedStatic<GameStats> gameStatsMockedStatic = mockStatic(GameStats.class);
+            when(GameStats.getVersionOfGame()).thenReturn(1);
             int[][] arrayOfFields = {
                     {1, 1, 2},
                     {2, 2, 1},
                     {1, 2, 1},
             };
-            when(GameMechanics.getArrayOfFields()).thenReturn(arrayOfFields);
+            when(GameStats.getArrayOfFields()).thenReturn(arrayOfFields);
             //When&Then
-            assertThrows(NotEmptyFieldException.class, gameMechanics::makeAMove);
+            assertThrows(NotEmptyFieldException.class, playerChoicesImplementation::makeAMove);
             consoleMock.close();
-            gameMechanicsMockedStatic.close();
+            gameStatsMockedStatic.close();
         }
     }
     @Nested
     @DisplayName("Win for 10x10 tests")
     class WinForBiggerMapXAndO{
+
         @Test
         void winByOInRow() {
             //Given
@@ -406,11 +405,12 @@ public class GameMechanicsTestSuit {
                     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
             };
-            MockedStatic<GameMechanics> gameMechanicsMockedStatic = mockStatic(GameMechanics.class);
-            when(GameMechanics.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
+            MockedStatic<GameStats> gameStatsMockedStatic = mockStatic(GameStats.class);
+            when(GameStats.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
+            when(GameStats.getTurnOfPlayer()).thenReturn(1);
             //When&Then
-            assertEquals(1, gameMechanics.checkForVictoryForBiggerMap());
-            gameMechanicsMockedStatic.close();
+            assertEquals(1, gameMechanics.checkForVictoryForBiggerMap(arrayOfFields));
+            gameStatsMockedStatic.close();
         }
         @Test
         void winByXInRow() {
@@ -428,11 +428,12 @@ public class GameMechanicsTestSuit {
                     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                     {0, 0, 0, 0, 0, 2, 2, 2, 2, 2 }
             };
-            MockedStatic<GameMechanics> gameMechanicsMockedStatic = mockStatic(GameMechanics.class);
-            when(GameMechanics.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
+            MockedStatic<GameStats> gameStatsMockedStatic = mockStatic(GameStats.class);
+            when(GameStats.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
+            when(GameStats.getTurnOfPlayer()).thenReturn(2);
             //When&Then
-            assertEquals(2, gameMechanics.checkForVictoryForBiggerMap());
-            gameMechanicsMockedStatic.close();
+            assertEquals(2, gameMechanics.checkForVictoryForBiggerMap(arrayOfFields));
+            gameStatsMockedStatic.close();
         }
         @Test
         void winByOInColumn() {
@@ -450,11 +451,12 @@ public class GameMechanicsTestSuit {
                     {0, 0, 0, 0, 0, 2, 2, 2, 0, 0 },
                     {0, 0, 0, 0, 0, 0, 2, 0, 0, 0 }
             };
-            MockedStatic<GameMechanics> gameMechanicsMockedStatic = mockStatic(GameMechanics.class);
-            when(GameMechanics.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
+            MockedStatic<GameStats> gameStatsMockedStatic = mockStatic(GameStats.class);
+            when(GameStats.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
+            when(GameStats.getTurnOfPlayer()).thenReturn(1);
             //When&Then
-            assertEquals(1, gameMechanics.checkForVictoryForBiggerMap());
-            gameMechanicsMockedStatic.close();
+            assertEquals(1, gameMechanics.checkForVictoryForBiggerMap(arrayOfFields));
+            gameStatsMockedStatic.close();
         }
         @Test
         void winByXInColumn() {
@@ -472,11 +474,12 @@ public class GameMechanicsTestSuit {
                     {0, 0, 0, 0, 0, 2, 2, 2, 0, 0 },
                     {0, 0, 0, 0, 0, 0, 2, 0, 0, 0 }
             };
-            MockedStatic<GameMechanics> gameMechanicsMockedStatic = mockStatic(GameMechanics.class);
-            when(GameMechanics.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
+            MockedStatic<GameStats> gameStatsMockedStatic = mockStatic(GameStats.class);
+            when(GameStats.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
+            when(GameStats.getTurnOfPlayer()).thenReturn(2);
             //When&Then
-            assertEquals(2, gameMechanics.checkForVictoryForBiggerMap());
-            gameMechanicsMockedStatic.close();
+            assertEquals(2, gameMechanics.checkForVictoryForBiggerMap(arrayOfFields));
+            gameStatsMockedStatic.close();
         }
         @Test
         void winByODiagonally() {
@@ -494,11 +497,12 @@ public class GameMechanicsTestSuit {
                     {0, 0, 0, 0, 0, 2, 2, 2, 0, 0 },
                     {0, 0, 0, 0, 0, 0, 2, 0, 0, 0 }
             };
-            MockedStatic<GameMechanics> gameMechanicsMockedStatic = mockStatic(GameMechanics.class);
-            when(GameMechanics.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
+            MockedStatic<GameStats> gameStatsMockedStatic = mockStatic(GameStats.class);
+            when(GameStats.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
+            when(GameStats.getTurnOfPlayer()).thenReturn(1);
             //When&Then
-            assertEquals(1, gameMechanics.checkForVictoryForBiggerMap());
-            gameMechanicsMockedStatic.close();
+            assertEquals(1, gameMechanics.checkForVictoryForBiggerMap(arrayOfFields));
+            gameStatsMockedStatic.close();
         }
         @Test
         void winByXDiagonally() {
@@ -516,11 +520,12 @@ public class GameMechanicsTestSuit {
                     {0, 0, 0, 2, 0, 2, 2, 2, 0, 0 },
                     {0, 0, 0, 0, 2, 0, 2, 0, 0, 0 }
             };
-            MockedStatic<GameMechanics> gameMechanicsMockedStatic = mockStatic(GameMechanics.class);
-            when(GameMechanics.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
+            MockedStatic<GameStats> gameStatsMockedStatic = mockStatic(GameStats.class);
+            when(GameStats.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
+            when(GameStats.getTurnOfPlayer()).thenReturn(2);
             //When&Then
-            assertEquals(2, gameMechanics.checkForVictoryForBiggerMap());
-            gameMechanicsMockedStatic.close();
+            assertEquals(2, gameMechanics.checkForVictoryForBiggerMap(arrayOfFields));
+            gameStatsMockedStatic.close();
         }
     }
 }
