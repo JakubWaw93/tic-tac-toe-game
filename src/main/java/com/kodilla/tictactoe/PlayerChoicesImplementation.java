@@ -16,11 +16,11 @@ public class PlayerChoicesImplementation {
         }
     }
 
-    public void Player1Name(){
+    public void player1Name(){
         GameStats.setPlayer1Name(Console.sayYourName1());
     }
 
-    public void Player2Name(){
+    public void player2Name(){
         if (GameStats.getNumberOfPlayers()==2) {
             GameStats.setPlayer2Name(Console.sayYourName2());
         } else {

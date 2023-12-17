@@ -15,11 +15,7 @@ public class GameMechanics {
                 GameStats.setRound(GameStats.getRound()+1);
                 setNewArray();
                 GameStats.setTurnOfPlayer(1);
-                if (GameStats.getVersionOfGame()==1) {
-                    Console.showInstructions();
-                } else if (GameStats.getVersionOfGame()==2) {
-                    Console.showInstructionsForBiggerMap();
-                }
+                Console.showInstructions();
                 singleGameLoop();
                 Console.showWinner();
                 addingPoint();
@@ -72,14 +68,14 @@ public class GameMechanics {
                 int i = random.nextInt(GameStats.getArrayOfFields().length);
                 int j = random.nextInt(GameStats.getArrayOfFields().length);
                 if (GameStats.getArrayOfFields()[i][j] == 0) {
-                    arrayOfFields[i][j] = GameStats.getTurnOfPlayer();
+                    GameStats.getArrayOfFields()[i][j] = GameStats.getTurnOfPlayer();
                     emptyField = true;
                 }
             } else if (GameStats.getVersionOfGame()==2) {
                 int i = random.nextInt(GameStats.getBiggerArrayOfFields().length);
                 int j = random.nextInt(GameStats.getBiggerArrayOfFields().length);
                 if (GameStats.getBiggerArrayOfFields()[i][j] == 0) {
-                    biggerArrayOfFields[i][j] = GameStats.getTurnOfPlayer();
+                    GameStats.getBiggerArrayOfFields()[i][j] = GameStats.getTurnOfPlayer();
                     emptyField = true;
                 }
             }
@@ -90,9 +86,10 @@ public class GameMechanics {
         if (GameStats.getVersionOfGame() == 1) {
             GameStats.setWinnerPlayer(checkForVictory(getArrayOfFields()));
         } else {
-            GameStats.setWinnerPlayer(checkForVictoryForBiggerMap(getBiggerArrayOfFields()));
+            GameStats.setWinnerPlayer(checkForVictory(getBiggerArrayOfFields()));
         }
     }
+
     public void addingPoint() {
         if (GameStats.isEnd()){
             if (GameStats.getWinnerPlayer()==1) {
@@ -104,70 +101,71 @@ public class GameMechanics {
     }
 
     public int checkForVictory(int[][] arrayOfFields) {
+        if (arrayOfFields.length > 2 && arrayOfFields.length < 10) {
+            int conversionFactor = arrayOfFields.length - 2;
 
-        if(arrayOfFields[0][0]==arrayOfFields[0][1]&&arrayOfFields[0][1]==arrayOfFields[0][2]&&arrayOfFields[0][0]!=0){
-            GameStats.setEnd(true);
-            return GameStats.getTurnOfPlayer();
-        }else if(arrayOfFields[1][0]==arrayOfFields[1][1]&&arrayOfFields[1][1]==arrayOfFields[1][2]&&arrayOfFields[1][2]!=0){
-            GameStats.setEnd(true);
-            return GameStats.getTurnOfPlayer();
-        }else if(arrayOfFields[2][0]==arrayOfFields[2][1]&&arrayOfFields[2][1]==arrayOfFields[2][2]&&arrayOfFields[2][2]!=0){
-            GameStats.setEnd(true);
-            return GameStats.getTurnOfPlayer();
-        }else if(arrayOfFields[0][0]==arrayOfFields[1][0]&&arrayOfFields[1][0]==arrayOfFields[2][0]&&arrayOfFields[2][0]!=0){
-            GameStats.setEnd(true);
-            return GameStats.getTurnOfPlayer();
-        }else if(arrayOfFields[0][1]==arrayOfFields[1][1]&&arrayOfFields[1][1]==arrayOfFields[2][1]&&arrayOfFields[2][1]!=0){
-            GameStats.setEnd(true);
-            return GameStats.getTurnOfPlayer();
-        }else if(arrayOfFields[0][2]==arrayOfFields[1][2]&&arrayOfFields[1][2]==arrayOfFields[2][2]&&arrayOfFields[2][2]!=0){
-            GameStats.setEnd(true);
-            return GameStats.getTurnOfPlayer();
-        }else if(arrayOfFields[0][0]==arrayOfFields[1][1]&&arrayOfFields[1][1]==arrayOfFields[2][2]&&arrayOfFields[2][2]!=0){
-            GameStats.setEnd(true);
-            return GameStats.getTurnOfPlayer();
-        }else if(arrayOfFields[2][0]==arrayOfFields[1][1]&&arrayOfFields[1][1]==arrayOfFields[0][2]&&arrayOfFields[0][2]!=0){
-            GameStats.setEnd(true);
-            return GameStats.getTurnOfPlayer();
+            for (int k = 0; k < conversionFactor; k++) {
+                for (int l = 0; l < conversionFactor; l++) {
+                    for (int i = 0; i < 3; i++) {
+                        if (arrayOfFields[i + k][0 + l] == arrayOfFields[i + k][1 + l] && arrayOfFields[i + k][1 + l] == arrayOfFields[i + k][2 + l] && arrayOfFields[i + k][2 + l] != 0) {
+                            GameStats.setEnd(true);
+                            return GameStats.getTurnOfPlayer();
+                        }
+                    }
+                    for (int j = 0; j < 3; j++) {
+                        if (arrayOfFields[0 + k][j + l] == arrayOfFields[1 + k][j + l] && arrayOfFields[1 + k][j + l] == arrayOfFields[2 + k][j + l] && arrayOfFields[2 + k][j] != 0) {
+                            GameStats.setEnd(true);
+                            return GameStats.getTurnOfPlayer();
+                        }
+                    }
+                    if (arrayOfFields[0 + k][0 + l] == arrayOfFields[1 + k][1 + l] && arrayOfFields[1 + k][1 + l] == arrayOfFields[2 + k][2 + l] && arrayOfFields[2 + k][2 + l] != 0) {
+                        GameStats.setEnd(true);
+                        return GameStats.getTurnOfPlayer();
+                    } else if (arrayOfFields[2 + k][ + l] == arrayOfFields[1 + k][1 + l] && arrayOfFields[1 + k][1 + l] == arrayOfFields[0 + k][2 + l] && arrayOfFields[0 + k][2 + l] != 0) {
+                        GameStats.setEnd(true);
+                        return GameStats.getTurnOfPlayer();
+                    }
+                }
+            }
+        } else if (arrayOfFields.length >= 10) {
+            int conversionFactor = arrayOfFields.length - 4;
+
+            for (int k = 0; k < conversionFactor; k++) {
+                for (int l = 0; l < conversionFactor; l++) {
+                    for (int i = 0; i < 5; i++) {
+                        if (arrayOfFields[i + k][0 + l] == arrayOfFields[i + k][1 + l] && arrayOfFields[i + k][1 + l] == arrayOfFields[i + k][2 + l] && arrayOfFields[i + k][2 + l] == arrayOfFields[i + k][3 + l] && arrayOfFields[i + k][3 + l] == arrayOfFields[i + k][4 + l] && arrayOfFields[i + k][4 + l] != 0) {
+                            GameStats.setEnd(true);
+                            return GameStats.getTurnOfPlayer();
+                        }
+                    }
+                    for (int j = 0; j < 5; j++) {
+                        if (arrayOfFields[0 + k][j + l] == arrayOfFields[1 + k][j + l] && arrayOfFields[1 + k][j + l] == arrayOfFields[2 + k][j + l] && arrayOfFields[2 + k][j + l] == arrayOfFields[3 + k][j + l] && arrayOfFields[3 + k][j + l] == arrayOfFields[4 + k][j + l] && arrayOfFields[4 + k][j + l] != 0) {
+                            GameStats.setEnd(true);
+                            return GameStats.getTurnOfPlayer();
+                        }
+                    }
+                    if (arrayOfFields[0 + k][0 + l] == arrayOfFields[1 + k][1 + l] && arrayOfFields[1 + k][1 + l] == arrayOfFields[2 + k][2 + l] && arrayOfFields[2 + k][2 + l] == arrayOfFields[3 + k][3 + l] && arrayOfFields[3 + k][3 + l] == arrayOfFields[4 + k][4 + l] && arrayOfFields[4 + k][4 + l] != 0) {
+                        GameStats.setEnd(true);
+                        return GameStats.getTurnOfPlayer();
+                    } else if (arrayOfFields[4 + k][0 + l] == arrayOfFields[3 + k][1 + l] && arrayOfFields[3 + k][1 + l] == arrayOfFields[2 + k][2 + l] && arrayOfFields[2 + k][2 + l] == arrayOfFields[1 + k][3 + l] && arrayOfFields[1 + k][3 + l] == arrayOfFields[0 + k][4 + l] && arrayOfFields[0 + k][4 + l] != 0) {
+                        GameStats.setEnd(true);
+                        return GameStats.getTurnOfPlayer();
+                    }
+                }
+            }
         }
         return 0;
     }
 
-    public int checkForVictoryForBiggerMap(int [][] biggerArrayOfFields ) {
-
-        for (int k = 0; k < 6; k++) {
-            for (int l = 0; l < 6; l++) {
-                for (int i = 0; i < 5; i++) {
-                    if (biggerArrayOfFields[i + k][0 + l] == biggerArrayOfFields[i + k][1 + l] && biggerArrayOfFields[i + k][1 + l] == biggerArrayOfFields[i + k][2 + l] && biggerArrayOfFields[i + k][2 + l] == biggerArrayOfFields[i + k][3 + l] && biggerArrayOfFields[i + k][3 + l] == biggerArrayOfFields[i + k][4 + l] && biggerArrayOfFields[i + k][4 + l] != 0) {
-                        GameStats.setEnd(true);
-                        return GameStats.getTurnOfPlayer();
-                    }
-                }
-                for (int j = 0; j < 5; j++) {
-                    if (biggerArrayOfFields[0 + k][j + l] == biggerArrayOfFields[1 + k][j + l] && biggerArrayOfFields[1 + k][j + l] == biggerArrayOfFields[2 + k][j + l] && biggerArrayOfFields[2 + k][j + l] == biggerArrayOfFields[3 + k][j + l] && biggerArrayOfFields[3 + k][j + l] == biggerArrayOfFields[4 + k][j + l] && biggerArrayOfFields[4 + k][j + l] != 0) {
-                        GameStats.setEnd(true);
-                        return GameStats.getTurnOfPlayer();
-                    }
-                }
-                if (biggerArrayOfFields[0 + k][0 + l] == biggerArrayOfFields[1 + k][1 + l] && biggerArrayOfFields[1 + k][1 + l] == biggerArrayOfFields[2 + k][2 + l] && biggerArrayOfFields[2 + k][2 + l] == biggerArrayOfFields[3 + k][3 + l] && biggerArrayOfFields[3 + k][3 + l] == biggerArrayOfFields[4 + k][4 + l] && biggerArrayOfFields[4 + k][4 + l] != 0) {
-                    GameStats.setEnd(true);
-                    return GameStats.getTurnOfPlayer();
-                } else if (biggerArrayOfFields[4 + k][0 + l] == biggerArrayOfFields[3 + k][1 + l] && biggerArrayOfFields[3 + k][1 + l] == biggerArrayOfFields[2 + k][2 + l] && biggerArrayOfFields[2 + k][2 + l] == biggerArrayOfFields[1 + k][3 + l] && biggerArrayOfFields[1 + k][3 + l] == biggerArrayOfFields[0 + k][4 + l] && biggerArrayOfFields[0 + k][4 + l] != 0) {
-                    GameStats.setEnd(true);
-                    return GameStats.getTurnOfPlayer();
-                }
-            }
-
-        }return 0;
+    public void checkForFullMap() {
+        if (GameStats.getVersionOfGame()==1){
+            fullMap(GameStats.getArrayOfFields());
+        } else if (GameStats.getVersionOfGame()==2) {
+            fullMap(GameStats.getBiggerArrayOfFields());
+        }
     }
 
-    public void checkForFullMap() {
-        int[][]arrayOfFields=null;
-        if (GameStats.getVersionOfGame()==1){
-            arrayOfFields=GameStats.getArrayOfFields();
-        } else if (GameStats.getVersionOfGame()==2) {
-            arrayOfFields=GameStats.getBiggerArrayOfFields();
-        }
+    public boolean fullMap(int[][] arrayOfFields) {
         int min=2;
         for (int[] arrayOfField : arrayOfFields) {
             for (int i : arrayOfField) {
@@ -178,7 +176,9 @@ public class GameMechanics {
         }
         if (min > 0) {
             GameStats.setEnd(true);
+            return true;
         }
+        return false;
     }
 
     public void changeTurn() {
@@ -209,10 +209,10 @@ public class GameMechanics {
     }
 
     public void setNewArray() {
-        for (int[] arrayOfField : GameStats.arrayOfFields) {
+        for (int[] arrayOfField : GameStats.getArrayOfFields()) {
             Arrays.fill(arrayOfField, 0);
         }
-        for (int[] arrayOfField : GameStats.biggerArrayOfFields) {
+        for (int[] arrayOfField : GameStats.getBiggerArrayOfFields()) {
             Arrays.fill(arrayOfField, 0);
         }
     }

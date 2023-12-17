@@ -6,8 +6,8 @@ import java.util.Map;
 
 public class GameRanking {
 
-    File savedHashMaps = new File("ranking.list");
-    Map<String, Integer> localMapForRanking = new HashMap<>();
+    private final File savedHashMaps = new File("ranking.list");
+    private final Map<String, Integer> localMapForRanking = new HashMap<>();
 
     public void saveMap() {
         try {

@@ -14,8 +14,8 @@ public class TheGame {
                 game();
             }
         }
-        playerChoicesImplementation.Player1Name();
-        playerChoicesImplementation.Player2Name();
+        playerChoicesImplementation.player1Name();
+        playerChoicesImplementation.player2Name();
         if (GameStats.getVersionOfGame() == 0) {
             try {
                 playerChoicesImplementation.whatVersionOfGame();

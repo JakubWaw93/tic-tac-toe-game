@@ -3,8 +3,8 @@ package com.kodilla.tictactoe;
 public class GameStats {
 
     private static int numberOfPlayers=0;
-    static final int [][] arrayOfFields = new int [3][3];
-    static final int [][] biggerArrayOfFields = new int [10][10];
+    private static final int [][] arrayOfFields = new int [3][3];
+    private static final int [][] biggerArrayOfFields = new int [10][10];
     private static int turnOfPlayer;
     private static boolean end = false;
     private static boolean totalEnd = false;
@@ -15,6 +15,8 @@ public class GameStats {
     private static String player1Name;
     private static String player2Name;
     private static int round=0;
+
+
 
     public static int getNumberOfPlayers() {
         return numberOfPlayers;

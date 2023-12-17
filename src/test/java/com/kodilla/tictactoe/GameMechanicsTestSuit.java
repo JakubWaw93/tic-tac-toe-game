@@ -243,18 +243,18 @@ public class GameMechanicsTestSuit {
         @Test
         void winByOInColumn3() {
             //Given
-            int winnerPlayer = 0;
+            GameMechanics gameMechanics = new GameMechanics();
+            MockedStatic<GameStats> gameStatsMockedStatic = mockStatic(GameStats.class);
+            when(GameStats.getTurnOfPlayer()).thenReturn(1);
             int[][] arrayOfFields = {
                     {0, 0, 1},
                     {0, 0, 1},
                     {0, 0, 1}
             };
             //When
-            if (arrayOfFields[0][2] == arrayOfFields[1][2] && arrayOfFields[1][2] == arrayOfFields[2][2] && arrayOfFields[2][2] != 0) {
-                winnerPlayer = arrayOfFields[0][2];
-            }
             //Then
-            assertEquals(1, winnerPlayer);
+            assertEquals(1, gameMechanics.checkForVictory(arrayOfFields));
+            gameStatsMockedStatic.close();
         }
 
         @Test
@@ -296,53 +296,19 @@ public class GameMechanicsTestSuit {
     @Test
     void FullMapTest() {
         //Given
-        int winnerPlayer = 0;
-        boolean end = false;
+        GameMechanics gameMechanics = new GameMechanics();
+        MockedStatic<GameStats> gameStatsMockedStatic = mockStatic(GameStats.class);
+        when(GameStats.getTurnOfPlayer()).thenReturn(1);
         int[][] arrayOfFields = {
                 {1, 1, 2},
                 {2, 2, 1},
                 {1, 2, 1}
         };
         //When
-        int min = 2;
-        for (int[] arrayOfField : arrayOfFields) {
-            for (int i : arrayOfField) {
-                if (i < min) {
-                    min = i;
-                }
-            }
-        }
-        if (min > 0) {
-            end = true;
-        }
-        if (arrayOfFields[0][0] == arrayOfFields[0][1] && arrayOfFields[0][1] == arrayOfFields[0][2] && arrayOfFields[0][0] != 0) {
-            end = true;
-            winnerPlayer = arrayOfFields[0][0];
-        } else if (arrayOfFields[1][0] == arrayOfFields[1][1] && arrayOfFields[1][1] == arrayOfFields[1][2] && arrayOfFields[1][2] != 0) {
-            end = true;
-            winnerPlayer = arrayOfFields[1][0];
-        } else if (arrayOfFields[2][0] == arrayOfFields[2][1] && arrayOfFields[2][1] == arrayOfFields[2][2] && arrayOfFields[2][2] != 0) {
-            end = true;
-            winnerPlayer = arrayOfFields[2][0];
-        } else if (arrayOfFields[0][0] == arrayOfFields[1][0] && arrayOfFields[1][0] == arrayOfFields[2][0] && arrayOfFields[2][0] != 0) {
-            end = true;
-            winnerPlayer = arrayOfFields[0][0];
-        } else if (arrayOfFields[0][1] == arrayOfFields[1][1] && arrayOfFields[1][1] == arrayOfFields[2][1] && arrayOfFields[2][1] != 0) {
-            end = true;
-            winnerPlayer = arrayOfFields[0][1];
-        } else if (arrayOfFields[0][2] == arrayOfFields[1][2] && arrayOfFields[1][2] == arrayOfFields[2][2] && arrayOfFields[2][2] != 0) {
-            end = true;
-            winnerPlayer = arrayOfFields[0][2];
-        } else if (arrayOfFields[0][0] == arrayOfFields[1][1] && arrayOfFields[1][1] == arrayOfFields[2][2] && arrayOfFields[2][2] != 0) {
-            end = true;
-            winnerPlayer = arrayOfFields[0][0];
-        } else if (arrayOfFields[2][0] == arrayOfFields[1][0] && arrayOfFields[1][0] == arrayOfFields[0][2] && arrayOfFields[0][2] != 0) {
-            end = true;
-            winnerPlayer = arrayOfFields[2][0];
-        }
         //Then
-        assertTrue(end);
-        assertEquals(0, winnerPlayer);
+        assertTrue(gameMechanics.fullMap(arrayOfFields));
+        assertEquals(0, gameMechanics.checkForVictory(arrayOfFields));
+        gameStatsMockedStatic.close();
     }
 
     @Nested
@@ -409,7 +375,7 @@ public class GameMechanicsTestSuit {
             when(GameStats.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
             when(GameStats.getTurnOfPlayer()).thenReturn(1);
             //When&Then
-            assertEquals(1, gameMechanics.checkForVictoryForBiggerMap(arrayOfFields));
+            assertEquals(1, gameMechanics.checkForVictory(arrayOfFields));
             gameStatsMockedStatic.close();
         }
         @Test
@@ -429,10 +395,10 @@ public class GameMechanicsTestSuit {
                     {0, 0, 0, 0, 0, 2, 2, 2, 2, 2 }
             };
             MockedStatic<GameStats> gameStatsMockedStatic = mockStatic(GameStats.class);
-            when(GameStats.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
+            //when(GameStats.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
             when(GameStats.getTurnOfPlayer()).thenReturn(2);
             //When&Then
-            assertEquals(2, gameMechanics.checkForVictoryForBiggerMap(arrayOfFields));
+            assertEquals(2, gameMechanics.checkForVictory(arrayOfFields));
             gameStatsMockedStatic.close();
         }
         @Test
@@ -455,7 +421,7 @@ public class GameMechanicsTestSuit {
             when(GameStats.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
             when(GameStats.getTurnOfPlayer()).thenReturn(1);
             //When&Then
-            assertEquals(1, gameMechanics.checkForVictoryForBiggerMap(arrayOfFields));
+            assertEquals(1, gameMechanics.checkForVictory(arrayOfFields));
             gameStatsMockedStatic.close();
         }
         @Test
@@ -478,7 +444,7 @@ public class GameMechanicsTestSuit {
             when(GameStats.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
             when(GameStats.getTurnOfPlayer()).thenReturn(2);
             //When&Then
-            assertEquals(2, gameMechanics.checkForVictoryForBiggerMap(arrayOfFields));
+            assertEquals(2, gameMechanics.checkForVictory(arrayOfFields));
             gameStatsMockedStatic.close();
         }
         @Test
@@ -501,7 +467,7 @@ public class GameMechanicsTestSuit {
             when(GameStats.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
             when(GameStats.getTurnOfPlayer()).thenReturn(1);
             //When&Then
-            assertEquals(1, gameMechanics.checkForVictoryForBiggerMap(arrayOfFields));
+            assertEquals(1, gameMechanics.checkForVictory(arrayOfFields));
             gameStatsMockedStatic.close();
         }
         @Test
@@ -524,7 +490,7 @@ public class GameMechanicsTestSuit {
             when(GameStats.getBiggerArrayOfFields()).thenReturn(arrayOfFields);
             when(GameStats.getTurnOfPlayer()).thenReturn(2);
             //When&Then
-            assertEquals(2, gameMechanics.checkForVictoryForBiggerMap(arrayOfFields));
+            assertEquals(2, gameMechanics.checkForVictory(arrayOfFields));
             gameStatsMockedStatic.close();
         }
     }
