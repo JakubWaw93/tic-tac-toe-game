@@ -4,12 +4,8 @@ plugins {
 
 group = 'com.kodilla'
 version = '1.0-SNAPSHOT'
+mainClassName = 'com.kodilla.tictactoe.GameRunner'
 
-jar {
-    manifest {
-        attributes 'Main-Class': 'com.kodilla.tictactoe.GameRunner'
-    }
-}
 
 java {
     version = "21"
